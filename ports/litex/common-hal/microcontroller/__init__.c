@@ -31,10 +31,12 @@
 
 #include "common-hal/microcontroller/Pin.h"
 #include "common-hal/microcontroller/Processor.h"
+#include "common-hal/memoryio/ByteArray.h"
 
 #include "shared-bindings/microcontroller/__init__.h"
 #include "shared-bindings/microcontroller/Pin.h"
 #include "shared-bindings/microcontroller/Processor.h"
+#include "shared-bindings/memoryio/ByteArray.h"
 
 #include "supervisor/filesystem.h"
 #include "supervisor/shared/safe_mode.h"
@@ -96,6 +98,21 @@ const mcu_processor_obj_t common_hal_mcu_processor_obj = {
         .type = &mcu_processor_type,
     },
 };
+
+#if CIRCUITPY_MEMORYIO
+#ifndef CSR_BASE
+#define CSR_BASE 0x00000000L
+#endif
+
+// The singleton memoryio.ByteArray object.
+const memoryio_bytearray_obj_t common_hal_mcu_memoryio_obj = {
+    .base = {
+        .type = &memoryio_bytearray_type,
+    },
+    .len = 0x1000000,
+    .start_address = (uint32_t*) (CSR_BASE)
+};
+#endif
 
 const mcu_pin_obj_t pin_TOUCH1 = PIN(0);
 const mcu_pin_obj_t pin_TOUCH2 = PIN(1);

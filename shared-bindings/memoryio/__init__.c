@@ -1,10 +1,9 @@
-
 /*
  * This file is part of the MicroPython project, http://micropython.org/
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Scott Shawcroft
+ * Copyright (c) 2017 Scott Shawcroft for Adafruit Industries
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,41 +24,30 @@
  * THE SOFTWARE.
  */
 
-#ifndef MICROPY_INCLUDED_SHARED_BINDINGS_MICROCONTROLLER___INIT___H
-#define MICROPY_INCLUDED_SHARED_BINDINGS_MICROCONTROLLER___INIT___H
-
-#include "py/mpconfig.h"
 #include "py/obj.h"
+#include "py/mphal.h"
+#include "py/runtime.h"
 
-#include "common-hal/microcontroller/Processor.h"
+#include "shared-bindings/memoryio/__init__.h"
+#include "shared-bindings/memoryio/ByteArray.h"
 
-#include "shared-bindings/microcontroller/RunMode.h"
+//| """Raw memory
+//|
+//| The `memoryio` module allows you to store whatever raw bytes you wish in a
+//| section of memory.
+//|
+//| Note that this module can't be imported and used directly. The sole
+//| instance of :class:`ByteArray` is available at
+//| :attr:`microcontroller.memoryio`."""
+//|
+STATIC const mp_rom_map_elem_t memoryio_module_globals_table[] = {
+    { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_memoryio) },
+    { MP_ROM_QSTR(MP_QSTR_bytearray),   MP_ROM_PTR(&memoryio_bytearray_type) },
+};
 
-extern void common_hal_mcu_delay_us(uint32_t);
+STATIC MP_DEFINE_CONST_DICT(memoryio_module_globals, memoryio_module_globals_table);
 
-extern void common_hal_mcu_disable_interrupts(void);
-extern void common_hal_mcu_enable_interrupts(void);
-
-extern void common_hal_mcu_on_next_reset(mcu_runmode_t runmode);
-extern void common_hal_mcu_reset(void);
-
-extern const mp_obj_dict_t mcu_pin_globals;
-
-extern const mcu_processor_obj_t common_hal_mcu_processor_obj;
-
-#if CIRCUITPY_MEMORYIO
-#include "common-hal/memoryio/ByteArray.h"
-extern const memoryio_bytearray_obj_t common_hal_mcu_memoryio_obj;
-#endif
-
-#if CIRCUITPY_INTERNAL_NVM_SIZE > 0
-#include "common-hal/nvm/ByteArray.h"
-extern const nvm_bytearray_obj_t common_hal_mcu_nvm_obj;
-#endif
-
-#if CIRCUITPY_WATCHDOG
-#include "common-hal/watchdog/WatchDogTimer.h"
-extern watchdog_watchdogtimer_obj_t common_hal_mcu_watchdogtimer_obj;
-#endif
-
-#endif  // MICROPY_INCLUDED_SHARED_BINDINGS_MICROCONTROLLER___INIT___H
+const mp_obj_module_t memoryio_module = {
+    .base = { &mp_type_module },
+    .globals = (mp_obj_dict_t*)&memoryio_module_globals,
+};

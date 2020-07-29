@@ -423,6 +423,11 @@ extern const struct _mp_obj_module_t math_module;
 #define MATH_MODULE
 #endif
 
+// This is not a top-level module; it's microcontroller.memoryio.
+#if CIRCUITPY_MEMORYIO
+extern const struct _mp_obj_module_t memoryio_module;
+#endif
+
 #if CIRCUITPY__EVE
 extern const struct _mp_obj_module_t _eve_module;
 #define _EVE_MODULE            { MP_OBJ_NEW_QSTR(MP_QSTR__eve), (mp_obj_t)&_eve_module },

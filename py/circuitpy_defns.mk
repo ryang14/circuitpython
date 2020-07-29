@@ -171,6 +171,9 @@ endif
 ifeq ($(CIRCUITPY_MATH),1)
 SRC_PATTERNS += math/%
 endif
+ifeq ($(CIRCUITPY_MEMORYIO),1)
+SRC_PATTERNS += memoryio/%
+endif
 ifeq ($(CIRCUITPY__EVE),1)
 SRC_PATTERNS += _eve/%
 endif
@@ -301,6 +304,8 @@ SRC_COMMON_HAL_ALL = \
 	gnss/SatelliteSystem.c \
 	i2cperipheral/I2CPeripheral.c \
 	i2cperipheral/__init__.c \
+	memoryio/ByteArray.c \
+	memoryio/__init__.c \
 	microcontroller/Pin.c \
 	microcontroller/Processor.c \
 	microcontroller/__init__.c \

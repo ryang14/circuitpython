@@ -1,10 +1,9 @@
-
 /*
  * This file is part of the MicroPython project, http://micropython.org/
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Scott Shawcroft
+ * Copyright (c) 2017 Scott Shawcroft for Adafruit Industries
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,41 +24,26 @@
  * THE SOFTWARE.
  */
 
-#ifndef MICROPY_INCLUDED_SHARED_BINDINGS_MICROCONTROLLER___INIT___H
-#define MICROPY_INCLUDED_SHARED_BINDINGS_MICROCONTROLLER___INIT___H
-
-#include "py/mpconfig.h"
-#include "py/obj.h"
-
-#include "common-hal/microcontroller/Processor.h"
-
-#include "shared-bindings/microcontroller/RunMode.h"
-
-extern void common_hal_mcu_delay_us(uint32_t);
-
-extern void common_hal_mcu_disable_interrupts(void);
-extern void common_hal_mcu_enable_interrupts(void);
-
-extern void common_hal_mcu_on_next_reset(mcu_runmode_t runmode);
-extern void common_hal_mcu_reset(void);
-
-extern const mp_obj_dict_t mcu_pin_globals;
-
-extern const mcu_processor_obj_t common_hal_mcu_processor_obj;
-
-#if CIRCUITPY_MEMORYIO
 #include "common-hal/memoryio/ByteArray.h"
-extern const memoryio_bytearray_obj_t common_hal_mcu_memoryio_obj;
-#endif
 
-#if CIRCUITPY_INTERNAL_NVM_SIZE > 0
-#include "common-hal/nvm/ByteArray.h"
-extern const nvm_bytearray_obj_t common_hal_mcu_nvm_obj;
-#endif
+#include "supervisor/shared/stack.h"
 
-#if CIRCUITPY_WATCHDOG
-#include "common-hal/watchdog/WatchDogTimer.h"
-extern watchdog_watchdogtimer_obj_t common_hal_mcu_watchdogtimer_obj;
-#endif
+#include <stdint.h>
+#include <string.h>
 
-#endif  // MICROPY_INCLUDED_SHARED_BINDINGS_MICROCONTROLLER___INIT___H
+uint32_t common_hal_memoryio_bytearray_get_length(memoryio_bytearray_obj_t *self) {
+    return self->len;
+}
+
+bool common_hal_memoryio_bytearray_set_bytes(memoryio_bytearray_obj_t *self,
+        uint32_t start_index, uint8_t* values, uint32_t len) {
+    memcpy(self->start_address + start_index, values, len);
+    assert_heap_ok();
+    return true;
+}
+
+// memoryio memory is memory mapped so reading it is easy.
+void common_hal_memoryio_bytearray_get_bytes(memoryio_bytearray_obj_t *self,
+    uint32_t start_index, uint32_t len, uint8_t* values) {
+    memcpy(values, self->start_address + start_index, len);
+}
