@@ -423,9 +423,11 @@ extern const struct _mp_obj_module_t math_module;
 #define MATH_MODULE
 #endif
 
-// This is not a top-level module; it's microcontroller.memoryio.
 #if CIRCUITPY_MEMORYIO
 extern const struct _mp_obj_module_t memoryio_module;
+#define MEMORYIO_MODULE        { MP_ROM_QSTR(MP_QSTR_memoryio),  MP_ROM_PTR(&memoryio_module) },
+#else
+#define MEMORYIO_MODULE
 #endif
 
 #if CIRCUITPY__EVE
@@ -723,6 +725,7 @@ extern const struct _mp_obj_module_t watchdog_module;
     I2CPERIPHERAL_MODULE \
     JSON_MODULE \
     MATH_MODULE \
+    MEMORYIO_MODULE \
     _EVE_MODULE \
     MEMORYMONITOR_MODULE \
     MICROCONTROLLER_MODULE \

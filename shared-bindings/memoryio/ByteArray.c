@@ -39,11 +39,23 @@
 //|        import microcontroller
 //|        microcontroller.memoryio[0:3] = b\"\xcc\x10\x00\""""
 //|
-
 //|     def __init__(self) -> None:
 //|         """Not currently dynamically supported. Access the sole instance through `microcontroller.memoryio`."""
 //|         ...
 //|
+STATIC mp_obj_t memoryio_bytearray_make_new(const mp_obj_type_t *type,
+        mp_uint_t n_args, const mp_obj_t *args, mp_map_t *kw_args) {
+    mp_arg_check_num(n_args, kw_args, 2, 2, false);
+
+    memoryio_bytearray_obj_t *self = m_new_obj(memoryio_bytearray_obj_t);
+    self->base.type = &memoryio_bytearray_type;
+
+    self->start_address = (uint32_t *)mp_obj_get_int(args[0]);
+
+    self->len = mp_obj_get_int(args[1]);
+
+    return MP_OBJ_FROM_PTR(self);
+}
 
 //|     def __bool__(self) -> bool:
 //|         ...
@@ -159,6 +171,7 @@ STATIC mp_obj_t memoryio_bytearray_subscr(mp_obj_t self_in, mp_obj_t index_in, m
 const mp_obj_type_t memoryio_bytearray_type = {
     { &mp_type_type },
     .name = MP_QSTR_bytearray,
+    .make_new = memoryio_bytearray_make_new,
     .subscr = memoryio_bytearray_subscr,
     .unary_op = memoryio_bytearray_unary_op,
     .print = NULL,
