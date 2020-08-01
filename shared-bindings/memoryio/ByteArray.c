@@ -36,11 +36,15 @@
 //|
 //|     Usage::
 //|
-//|        import microcontroller
-//|        microcontroller.memoryio[0:3] = b\"\xcc\x10\x00\""""
+//|        import memoryio
+//|        memory = memoryio.bytearray(<start address>, <length>)
+//|        memory[0:3] = b\"\xcc\x10\x00\""""
 //|
-//|     def __init__(self) -> None:
-//|         """Not currently dynamically supported. Access the sole instance through `microcontroller.memoryio`."""
+//|     def __init__(self, start_address: int, length: int) -> None:
+//|         """Create a new memoryio.bytearray object with the start address and length.
+//|         
+//|         :param int start_address: The start address of the memory region to be accessed
+//|         :param int length: The length of the memory region to be accessed"""
 //|         ...
 //|
 STATIC mp_obj_t memoryio_bytearray_make_new(const mp_obj_type_t *type,
@@ -170,7 +174,7 @@ STATIC mp_obj_t memoryio_bytearray_subscr(mp_obj_t self_in, mp_obj_t index_in, m
 
 const mp_obj_type_t memoryio_bytearray_type = {
     { &mp_type_type },
-    .name = MP_QSTR_bytearray,
+    .name = MP_QSTR_ByteArray,
     .make_new = memoryio_bytearray_make_new,
     .subscr = memoryio_bytearray_subscr,
     .unary_op = memoryio_bytearray_unary_op,
