@@ -37,13 +37,35 @@ uint32_t common_hal_memoryio_bytearray_get_length(memoryio_bytearray_obj_t *self
 
 bool common_hal_memoryio_bytearray_set_bytes(memoryio_bytearray_obj_t *self,
         uint32_t start_index, uint8_t* values, uint32_t len) {
-    memcpy(self->start_address + start_index, values, len);
-    assert_heap_ok();
-    return true;
+    // Determine if the region is in the write allow list
+    bool writable = false;
+    for(int index = 0; index < num_allowed_regions; index++) {
+        if(self->start_address + start_index >= allowed_regions[index].start_address
+            && self->start_address + start_index <= allowed_regions[index].start_address + allowed_regions[index].len
+            && self->start_address + start_index + len <= allowed_regions[index].start_address + allowed_regions[index].len) {
+                writable = true;
+            }
+    }
+
+    if(writable) {
+        memcpy(self->start_address + start_index, values, len);
+        assert_heap_ok();
+        return true;
+    } else {
+        return false;
+    }
 }
 
-// memoryio memory is memory mapped so reading it is easy.
 void common_hal_memoryio_bytearray_get_bytes(memoryio_bytearray_obj_t *self,
     uint32_t start_index, uint32_t len, uint8_t* values) {
     memcpy(values, self->start_address + start_index, len);
 }
+
+// Allow list of regions that can be written to
+const int num_allowed_regions = 1;
+memoryio_allowed_region_t allowed_regions[1] = {
+    {
+        .start_address = (uint32_t*)0x47000000,
+        .len = 8
+    }
+};

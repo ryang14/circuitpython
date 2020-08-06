@@ -24,8 +24,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef MICROPY_INCLUDED_LITEX_COMMON_HAL_MEMORYIO_BYTEARRAY_H
-#define MICROPY_INCLUDED_LITEX_COMMON_HAL_MEMORYIO_BYTEARRAY_H
+#ifndef MICROPY_INCLUDED_ATMEL_SAMD_COMMON_HAL_MEMORYIO_BYTEARRAY_H
+#define MICROPY_INCLUDED_ATMEL_SAMD_COMMON_HAL_MEMORYIO_BYTEARRAY_H
 
 #include "py/obj.h"
 
@@ -35,4 +35,12 @@ typedef struct {
     uint32_t len;
 } memoryio_bytearray_obj_t;
 
-#endif // MICROPY_INCLUDED_LITEX_COMMON_HAL_MEMORYIO_BYTEARRAY_H
+typedef struct {
+    uint32_t* start_address;
+    uint32_t len;
+} memoryio_allowed_region_t;
+
+const int num_allowed_regions;
+memoryio_allowed_region_t allowed_regions[1];
+
+#endif // MICROPY_INCLUDED_ATMEL_SAMD_COMMON_HAL_MEMORYIO_BYTEARRAY_H
